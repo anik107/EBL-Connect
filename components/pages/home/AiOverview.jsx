@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { data } from "@/data/data";
-import ReactTextFormat from "react-text-format";
+import Markdown from "react-markdown";
 const ai_overview = data?.ai_overview;
 
 const AiOverview = () => {
@@ -28,9 +28,9 @@ const AiOverview = () => {
                   <CardTitle className="capitalize">{key}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ReactTextFormat className="prose dark:prose-invert max-w-none text-sm">
-                    {value}
-                  </ReactTextFormat>
+                  <div className="prose dark:prose-invert max-w-none text-sm">
+                    <Markdown>{value.toString()}</Markdown>
+                  </div>
                 </CardContent>
               </Card>
             </li>
