@@ -181,7 +181,7 @@ const ActionItems = () => {
                         colSpan={11}
                         className="text-center p-2 sm:p-3 whitespace-nowrap"
                       >
-                        No posts found!
+                        No comments found!
                       </td>
                     </tr>
                   ) : (
