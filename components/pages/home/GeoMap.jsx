@@ -2,20 +2,18 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import GlobalContext from "@/contexts/context";
-import {
-  GoogleMap,
-  InfoWindow,
-  Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api";
-import { useContext, useMemo, useState } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useContext, useMemo } from "react";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
-const containerStyle = {
-  width: "100%",
-  height: "500px",
-};
-
-const center = { lat: 23.8103, lng: 90.4125 };
+// Fix default marker icon issue in Leaflet + React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
 const allDivisions = [
   { name: "Dhaka", lat: 23.8103, lng: 90.4125 },
@@ -29,13 +27,8 @@ const allDivisions = [
 
 export default function GeoMap() {
   const { data, loading } = useContext(GlobalContext);
-  const [activeMarker, setActiveMarker] = useState(null);
 
   const inputData = data?.post_geolocation ?? {};
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  });
 
   const mergedData = useMemo(() => {
     return allDivisions.map((division) => ({
@@ -44,32 +37,32 @@ export default function GeoMap() {
     }));
   }, [inputData]);
 
-  console.log({ mergedData });
-
-  if (!isLoaded || loading) {
+  if (loading) {
     return (
       <Skeleton className="w-full aspect-square bg-slate-200 dark:bg-slate-700" />
     );
   }
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={6}>
+    <MapContainer
+      center={[23.8103, 90.4125]}
+      zoom={6}
+      style={{ height: "500px", width: "100%" }}
+      scrollWheelZoom={true}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
       {mergedData.map((loc, idx) => (
-        <Marker
-          key={idx}
-          position={{ lat: loc.lat, lng: loc.lng }}
-          onClick={() => setActiveMarker(idx)}
-        >
-          {activeMarker === idx && (
-            <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-              <div>
-                <strong>{loc.name}</strong>
-                <p>{loc.count} posts</p>
-              </div>
-            </InfoWindow>
-          )}
+        <Marker key={idx} position={[loc.lat, loc.lng]}>
+          <Popup>
+            <strong>{loc.name}</strong>
+            <br />
+            {loc.count} posts
+          </Popup>
         </Marker>
       ))}
-    </GoogleMap>
+    </MapContainer>
   );
 }

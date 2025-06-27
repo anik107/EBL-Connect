@@ -1,3 +1,4 @@
+import GeoWrapper from "@/components/common/GeoWrapper";
 import {
   Card,
   CardContent,
@@ -6,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import BankMentionsBarChart from "./BankMentionsBarChart";
-import GeoMap from "./GeoMap";
 
 const StrategicOverview = () => {
   return (
@@ -23,7 +23,7 @@ const StrategicOverview = () => {
             <BankMentionsBarChart />
           </div>
           <div>
-            <GeoMap />
+            <GeoWrapper />
           </div>
         </div>
       </CardContent>

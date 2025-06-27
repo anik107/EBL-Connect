@@ -73,58 +73,69 @@ const DataView = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {posts.map((row, index) => (
-                    <tr
-                      key={index}
-                      className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-700/50"
-                    >
-                      <td className="sticky left-0 bg-white dark:bg-slate-800 p-2 sm:p-3 border-r z-10 whitespace-nowrap">
-                        <div
-                          className="max-w-[120px] block sm:max-w-xs truncate font-bold"
-                          title={index}
-                        >
-                          {index}
-                        </div>
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        <a
-                          href={row?.post_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="max-w-[120px] block cursor-pointer text-blue-500 font-bold truncate"
-                        >
-                          {row.text}
-                        </a>
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.share_count}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.sentiment}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.reaction_count}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.post_routing_id}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.date}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.comment_count}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.category}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.emotion}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.Viral_score}
+                  {posts?.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={11}
+                        className="text-center p-2 sm:p-3 whitespace-nowrap"
+                      >
+                        No posts found!
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    posts.map((row, index) => (
+                      <tr
+                        key={index}
+                        className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-700/50"
+                      >
+                        <td className="sticky left-0 bg-white dark:bg-slate-800 p-2 sm:p-3 border-r z-10 whitespace-nowrap">
+                          <div
+                            className="max-w-[120px] block sm:max-w-xs truncate font-bold"
+                            title={index}
+                          >
+                            {index}
+                          </div>
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          <a
+                            href={row?.post_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="max-w-[120px] block cursor-pointer text-blue-500 font-bold truncate"
+                          >
+                            {row.text}
+                          </a>
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.share_count}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.sentiment}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.reaction_count}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.post_routing_id}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.date}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.comment_count}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.category}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.emotion}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.Viral_score}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -166,53 +177,64 @@ const DataView = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {comments.map((row, index) => (
-                    <tr
-                      key={index}
-                      className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-700/50"
-                    >
-                      <td className="sticky left-0 bg-white dark:bg-slate-800 p-2 sm:p-3 border-r z-10 whitespace-nowrap">
-                        <div
-                          className="max-w-[120px] block sm:max-w-xs truncate font-bold"
-                          title={index}
-                        >
-                          {index}
-                        </div>
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        <a
-                          href={row?.post_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="max-w-[120px] block cursor-pointer text-blue-500 font-bold truncate"
-                        >
-                          {row.comment_text}
-                        </a>
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.comment_likes}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.comment_replies}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.comment_time}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        {row.post_routing_id}
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap">
-                        <Badge asChild>
-                          <a href={row.comment_url} target="_blank">
-                            <ExternalLink /> Open Link
-                          </a>
-                        </Badge>
-                      </td>
-                      <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-                        {row.virality_score}
+                  {comments?.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={11}
+                        className="text-center p-2 sm:p-3 whitespace-nowrap"
+                      >
+                        No comments found!
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    comments.map((row, index) => (
+                      <tr
+                        key={index}
+                        className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-700/50"
+                      >
+                        <td className="sticky left-0 bg-white dark:bg-slate-800 p-2 sm:p-3 border-r z-10 whitespace-nowrap">
+                          <div
+                            className="max-w-[120px] block sm:max-w-xs truncate font-bold"
+                            title={index}
+                          >
+                            {index}
+                          </div>
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          <a
+                            href={row?.post_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="max-w-[120px] block cursor-pointer text-blue-500 font-bold truncate"
+                          >
+                            {row.comment_text}
+                          </a>
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.comment_likes}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.comment_replies}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.comment_time}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          {row.post_routing_id}
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap">
+                          <Badge asChild>
+                            <a href={row.comment_url} target="_blank">
+                              <ExternalLink /> Open Link
+                            </a>
+                          </Badge>
+                        </td>
+                        <td className="p-2 sm:p-3 whitespace-nowrap text-center">
+                          {row.virality_score}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
