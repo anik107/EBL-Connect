@@ -1,6 +1,5 @@
 import { BarChart3, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Reanalyze } from "../pages/home/Reanalyze";
 import { Button } from "../ui/button";
 
 const Header = () => {
@@ -21,9 +20,9 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
-        <div className="flex items-center space-x-3">
+        {/* <div className="flex items-center space-x-3">
           <Reanalyze />
-        </div>
+        </div> */}
         <Button
           variant="outline"
           size="sm"

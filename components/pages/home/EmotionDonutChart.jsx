@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import GlobalContext from "@/contexts/context";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Cell,
   Legend,
@@ -10,29 +12,22 @@ import {
   Tooltip,
 } from "recharts";
 
-const rawCategories = {
-  inquiry: "30%",
-  suggestions: "20%",
-  complaint: "10%",
-  praise: "10%",
-  other: "30%",
-  total_number_of_posts: 24,
-};
-
 const COLORS = {
-  Inquiry: "#3B82F6", // Blue
-  Suggestions: "#10B981", // Emerald
-  Complaint: "#F87171", // Red
-  Praise: "#FACC15", // Yellow
-  Other: "#6366F1", // Indigo
+  Inquiry: "#3B82F6",
+  Suggestions: "#10B981",
+  Complaint: "#F87171",
+  Praise: "#FACC15",
+  Other: "#6366F1",
 };
 
 const EmotionDonutChart = () => {
+  const { data, loading } = useContext(GlobalContext);
   const { resolvedTheme } = useTheme();
   const [hidden, setHidden] = useState([]);
 
-  // Transform & filter data
-  const data = Object.entries(rawCategories)
+  const rawCategories = data?.sentiment_analysis?.post_categories ?? {};
+
+  const chartData = Object.entries(rawCategories)
     .filter(([key]) => key !== "total_number_of_posts")
     .filter(([key]) => !hidden.includes(key))
     .map(([key, value]) => ({
@@ -40,7 +35,6 @@ const EmotionDonutChart = () => {
       value: parseFloat(value),
     }));
 
-  // Button toggle handler
   const handleToggle = (key) => {
     setHidden((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
@@ -65,9 +59,10 @@ const EmotionDonutChart = () => {
 
   const totalPosts = rawCategories.total_number_of_posts;
 
-  return (
+  return loading ? (
+    <Skeleton className="w-full aspect-video" />
+  ) : (
     <>
-      {/* Toggle buttons */}
       <div className="flex flex-wrap gap-2 mb-4 justify-center items-center">
         {Object.keys(rawCategories)
           .filter((key) => key !== "total_number_of_posts")
@@ -85,12 +80,11 @@ const EmotionDonutChart = () => {
           ))}
       </div>
 
-      {/* Chart container with center text */}
       <div className="relative w-full h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               cx="50%"
@@ -99,7 +93,7 @@ const EmotionDonutChart = () => {
               outerRadius={100}
               label
             >
-              {data.map((entry, index) => (
+              {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
               ))}
             </Pie>

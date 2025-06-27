@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -5,11 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { data } from "@/data/data";
-
-const posts = data?.action_items;
+import { Skeleton } from "@/components/ui/skeleton";
+import GlobalContext from "@/contexts/context";
+import { useContext } from "react";
 
 const ActionItems = () => {
+  const { data, loading } = useContext(GlobalContext);
+
+  if (loading) {
+    return <Skeleton className="w-full aspect-square" />;
+  }
+
+  const posts = data?.action_items ?? [];
+
   return (
     <Card className="border-0 shadow-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
       <CardHeader>

@@ -7,10 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { data } from "@/data/data";
+import { Skeleton } from "@/components/ui/skeleton";
+import GlobalContext from "@/contexts/context";
 import { PieChart as PieChartIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Cell,
   Legend,
@@ -26,11 +27,11 @@ const COLORS = {
   neutral: "#9CA3AF",
 };
 
-const rawSentiment = data?.sentiment_analysis?.sentiment_distribution;
-
 const SentimentDistribution = () => {
   const [hiddenKeys, setHiddenKeys] = useState([]);
-  const { resolvedTheme } = useTheme(); // light or dark
+  const { resolvedTheme } = useTheme();
+  const { data, loading } = useContext(GlobalContext);
+  const rawSentiment = data?.sentiment_analysis?.sentiment_distribution ?? {};
 
   const handleToggle = (key) => {
     setHiddenKeys((prev) =>
@@ -71,42 +72,46 @@ const SentimentDistribution = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 sm:space-y-6">
-        {/* Toggle Buttons */}
-        <div className="flex flex-wrap gap-2 mb-4 justify-center items-center">
-          {Object.keys(rawSentiment).map((key) => (
-            <Button
-              key={key}
-              variant="outline"
-              size="sm"
-              onClick={() => handleToggle(key)}
-              style={getButtonStyles(key)}
-              className="transition-all"
-            >
-              {key}
-            </Button>
-          ))}
-        </div>
-
-        {/* Chart */}
-        <ResponsiveContainer width="100%" height={500}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+        {loading ? (
+          <Skeleton className="w-full aspect-square bg-slate-200 dark:bg-slate-700" />
+        ) : (
+          <>
+            <div className="flex flex-wrap gap-2 mb-4 justify-center items-center">
+              {Object.keys(rawSentiment).map((key) => (
+                <Button
+                  key={key}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleToggle(key)}
+                  style={getButtonStyles(key)}
+                  className="transition-all"
+                >
+                  {key}
+                </Button>
               ))}
-            </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
+            </div>
+
+            <ResponsiveContainer width="100%" height={500}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  label
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend verticalAlign="bottom" height={36} />
+              </PieChart>
+            </ResponsiveContainer>
+          </>
+        )}
       </CardContent>
     </Card>
   );
