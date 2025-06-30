@@ -84,7 +84,7 @@ const ActionItems = () => {
       >
         <td className="sticky left-0 bg-white dark:bg-slate-800 p-2 sm:p-3 border-r z-10 whitespace-nowrap">
           <div
-            className="max-w-[120px] block sm:max-w-xs truncate font-bold"
+            className="max-w-[20px] block sm:max-w-xs truncate font-bold"
             title={index}
           >
             {index}
@@ -100,22 +100,21 @@ const ActionItems = () => {
             {row.text}
           </a>
         </td>
+        <td className="p-2 sm:p-3 whitespace-nowrap capitalize">{row.type}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap text-center">
           {row.share_count}
         </td>
-        <td className="p-2 sm:p-3 whitespace-nowrap">{row.sentiment}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap text-center">
           {row.reaction_count}
         </td>
-        <td className="p-2 sm:p-3 whitespace-nowrap">{row.post_routing_id}</td>
-        <td className="p-2 sm:p-3 whitespace-nowrap">{row.date}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-          {row.comment_count}
+          {row.comments_count}
         </td>
+        <td className="p-2 sm:p-3 whitespace-nowrap">{row.sentiment}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap">{row.category}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap">{row.emotion}</td>
         <td className="p-2 sm:p-3 whitespace-nowrap text-center">
-          {row.Viral_score}
+          {row.virality_score}
         </td>
       </tr>
     ));
@@ -138,27 +137,24 @@ const ActionItems = () => {
             <table className="w-full text-xs sm:text-sm">
               <thead className="sticky top-0 bg-slate-50 dark:bg-slate-700 z-10">
                 <tr className="border-b">
-                  <th className="sticky left-0 bg-slate-50 dark:bg-slate-700 p-2 sm:p-3 text-left font-medium border-r z-20 w-[200px] whitespace-nowrap"></th>
+                  <th className="sticky left-0 bg-slate-50 dark:bg-slate-700 p-2 sm:p-3 text-left font-medium border-r z-20 w-[20px] whitespace-nowrap"></th>
                   <th className="p-2 sm:p-3 text-left font-medium min-w-[100px] whitespace-nowrap">
                     Text
+                  </th>
+                  <th className="p-2 sm:p-3 font-medium min-w-[100px] whitespace-nowrap text-left">
+                    Type
                   </th>
                   <th className="p-2 sm:p-3 font-medium min-w-[100px] whitespace-nowrap text-center">
                     Share Count
                   </th>
-                  <th className="p-2 sm:p-3 text-left font-medium min-w-[60px] whitespace-nowrap">
-                    Sentiment
-                  </th>
                   <th className="p-2 sm:p-3 text-center font-medium min-w-[60px] whitespace-nowrap">
                     Reaction Count
                   </th>
-                  <th className="p-2 sm:p-3 text-left font-medium min-w-[80px] whitespace-nowrap">
-                    Post Routing ID
-                  </th>
-                  <th className="p-2 sm:p-3 text-left font-medium min-w-[100px] whitespace-nowrap">
-                    Date
-                  </th>
                   <th className="p-2 sm:p-3 text-center font-medium min-w-[100px] whitespace-nowrap">
                     Comment Count
+                  </th>
+                  <th className="p-2 sm:p-3 text-left font-medium min-w-[60px] whitespace-nowrap">
+                    Sentiment
                   </th>
                   <th className="p-2 sm:p-3 text-left font-medium min-w-[80px] whitespace-nowrap">
                     Category
@@ -167,7 +163,7 @@ const ActionItems = () => {
                     Emotion
                   </th>
                   <th className="p-2 sm:p-3 text-center font-medium min-w-[80px] whitespace-nowrap">
-                    Viral Score
+                    Virality Score
                   </th>
                 </tr>
               </thead>
