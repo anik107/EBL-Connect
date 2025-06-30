@@ -1,8 +1,10 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import GlobalContext from "@/contexts/context";
+import { getCategoriesAnalysis } from "@/services/emotion.service";
+import { Terminal } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Cell,
   Legend,
@@ -21,19 +23,48 @@ const COLORS = {
 };
 
 const EmotionDonutChart = () => {
-  const { data, loading } = useContext(GlobalContext);
+  const [categoryAnalysis, setCategoryAnalysis] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
   const [hidden, setHidden] = useState([]);
 
-  const rawCategories = data?.sentiment_analysis?.post_categories ?? {};
-
-  const chartData = Object.entries(rawCategories)
+  const chartData = Object.entries(categoryAnalysis)
     .filter(([key]) => key !== "total_number_of_posts")
     .filter(([key]) => !hidden.includes(key))
     .map(([key, value]) => ({
       name: key.charAt(0).toUpperCase() + key.slice(1),
       value: parseFloat(value),
     }));
+
+  useEffect(() => {
+    let ignore = false;
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await getCategoriesAnalysis();
+        if (!ignore && response?.data) {
+          setCategoryAnalysis(response?.data);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setError(error.message);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    if (!ignore) {
+      fetchData();
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const handleToggle = (key) => {
     setHidden((prev) =>
@@ -57,62 +88,76 @@ const EmotionDonutChart = () => {
     };
   };
 
-  const totalPosts = rawCategories.total_number_of_posts;
+  const totalPosts = categoryAnalysis.total_number_of_posts;
 
-  return loading ? (
-    <Skeleton className="w-full aspect-video" />
-  ) : (
-    <>
-      <div className="flex flex-wrap gap-2 mb-4 justify-center items-center">
-        {Object.keys(rawCategories)
-          .filter((key) => key !== "total_number_of_posts")
-          .map((key) => (
-            <Button
-              key={key}
-              size="sm"
-              variant="outline"
-              onClick={() => handleToggle(key)}
-              style={getButtonStyle(key)}
-              className="transition-all"
-            >
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </Button>
-          ))}
-      </div>
+  let content = null;
 
-      <div className="relative w-full h-[320px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              innerRadius={50}
-              outerRadius={100}
-              label
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
-
-        {/* Center label */}
-        <div className="absolute top-[calc(50%-1rem)] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center -z-1">
-          <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
-            {totalPosts}
-          </p>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
-            Total Posts
-          </p>
+  if (loading) {
+    content = <Skeleton className="w-full aspect-video" />;
+  } else if (!loading && error) {
+    content = (
+      <Alert variant="destructive">
+        <Terminal />
+        <AlertTitle>Error!</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  } else {
+    content = (
+      <>
+        <div className="flex flex-wrap gap-2 mb-4 justify-center items-center">
+          {Object.keys(categoryAnalysis)
+            .filter((key) => key !== "total_number_of_posts")
+            .map((key) => (
+              <Button
+                key={key}
+                size="sm"
+                variant="outline"
+                onClick={() => handleToggle(key)}
+                style={getButtonStyle(key)}
+                className="transition-all"
+              >
+                {key.charAt(0).toUpperCase() + key.slice(1)}
+              </Button>
+            ))}
         </div>
-      </div>
-    </>
-  );
+
+        <div className="relative w-full h-[320px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={100}
+                label
+              >
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </ResponsiveContainer>
+
+          {/* Center label */}
+          <div className="absolute top-[calc(50%-1rem)] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center -z-1">
+            <p className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              {totalPosts}
+            </p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Total Posts
+            </p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  return content;
 };
 export default EmotionDonutChart;
