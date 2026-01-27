@@ -3,7 +3,7 @@
 export const getAllPosts = async (page) => {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/full-data/posts/${page}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/full-data/posts/${page}`,
       {
         method: "GET",
         headers: {
@@ -23,7 +23,7 @@ export const getAllPosts = async (page) => {
 export const getAllComments = async (page) => {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/full-data/comments/${page}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/full-data/comments/${page}`,
       {
         method: "GET",
         headers: {

@@ -3,7 +3,7 @@
 export const getEmotions = async () => {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/sentiment-analysis/emotions`,
+      `${process.env.NEXT_PUBLIC_API_URL}/sentiment-analysis/emotions`,
       {
         method: "GET",
         headers: {
@@ -23,7 +23,7 @@ export const getEmotions = async () => {
 export const getCategoriesAnalysis = async () => {
   try {
     const response = await fetch(
-      `${process.env.API_URL}/sentiment-analysis/categories`,
+      `${process.env.NEXT_PUBLIC_API_URL}/sentiment-analysis/categories`,
       {
         method: "GET",
         headers: {

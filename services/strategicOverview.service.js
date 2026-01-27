@@ -2,7 +2,7 @@
 
 export const getBankMentions = async () => {
   try {
-    const response = await fetch(`${process.env.API_URL}/bank-mentions`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bank-mentions`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export const getBankMentions = async () => {
 
 export const getGeolocation = async () => {
   try {
-    const response = await fetch(`${process.env.API_URL}/geolocation `, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/geolocation `, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

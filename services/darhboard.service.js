@@ -2,7 +2,7 @@
 
 export const getDashboardData = async () => {
   try {
-    const response = await fetch(`${process.env.API_URL}/kpi`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/kpi`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -2,7 +2,7 @@
 
 export const getAiOverview = async () => {
   try {
-    const response = await fetch(`${process.env.API_URL}/ai-overview`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai-overview`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
