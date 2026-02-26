@@ -17,7 +17,7 @@ import {
 } from "recharts";
 
 const BANK_LABELS = {
-  prime_bank: "Prime Bank",
+  EBL_bank: "EBL Bank",
   eastern_bank: "Eastern Bank",
   brac_bank: "BRAC Bank",
   city_bank: "City Bank",
