@@ -2,7 +2,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getDashboardData } from "@/services/darhboard.service";
+import { data } from "@/data/data";
 import {
   Activity,
   Heart,
@@ -18,32 +18,9 @@ const KpiCards = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getDashboardData();
-        if (!ignore && response?.data) {
-          setDashboardData(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // load KPIs from local data
+    setDashboardData(data.kpi || {});
+    setLoading(false);
   }, []);
 
   return (

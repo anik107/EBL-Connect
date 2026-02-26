@@ -2,7 +2,7 @@
 
 import TanstackTableBody from "@/components/common/TanstackTableBody";
 import TanstackTableHeader from "@/components/common/TanstackTableHeader";
-import { getAllComments } from "@/services/fullData.service";
+import { data } from "@/data/data";
 import {
   getCoreRowModel,
   getSortedRowModel,
@@ -52,24 +52,33 @@ const AllComments = () => {
   const { page, limit, loading, totalComments, comments, isError, error } =
     state;
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = useCallback(() => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "RESET_ERROR" });
 
     try {
-      const response = await getAllComments(page);
-
-      if (response?.items) {
-        dispatch({ type: "SET_COMMENTS", payload: response?.items });
-        dispatch({
-          type: "SET_TOTAL_COMMENTS",
-          payload: response?.pagination?.total_comments,
-        });
-      }
+      // Create dummy comments from posts data
+      const allPosts = [...(data.action_items || []), ...(data.sentiment_analysis?.top_posts || [])];
+      const dummyComments = allPosts.map((post, index) => ({
+        id: index + 1,
+        comment_text: `Comment on: ${post.text.substring(0, 50)}...`,
+        comment_url: post.post_url,
+        comment_likes: Math.floor(Math.random() * 20),
+        comment_replies: Math.floor(Math.random() * 5),
+        comment_time: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+        virality_score: Math.floor(Math.random() * 100),
+      }));
+      
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedComments = dummyComments.slice(startIndex, endIndex);
+      
+      dispatch({ type: "SET_COMMENTS", payload: paginatedComments });
+      dispatch({ type: "SET_TOTAL_COMMENTS", payload: dummyComments.length });
     } catch (error) {
       dispatch({
         type: "SET_ERROR",
-        payload: error.message || "Failed to fetch users.",
+        payload: error.message || "Failed to fetch comments.",
       });
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });

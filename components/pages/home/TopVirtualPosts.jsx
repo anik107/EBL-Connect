@@ -9,42 +9,24 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getTopPosts } from "@/services/sentiment.service";
-import { Heart, MessageCircle, TrendingUp } from "lucide-react";
+// using local static dataset instead of backend
+import { data } from "@/data/data";
+import { Heart, MessageCircle, TrendingUp, Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const TopVirtualPosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // error is rarely used now, kept for future
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getTopPosts();
-        if (!ignore && response?.data) {
-          setPosts(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // load posts from local data file and ensure they're ordered by virality_score desc
+    // data.sentiment_analysis.top_posts contains the list
+    const top = (data.sentiment_analysis?.top_posts || []).slice().sort((a, b) => b.virality_score - a.virality_score);
+    setPosts(top);
+    setLoading(false);
   }, []);
 
   /**
@@ -66,12 +48,10 @@ const TopVirtualPosts = () => {
     );
   } else if (!loading && error) {
     content = (
-      <Alert variant="default | destructive">
-        <Terminal />
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          You can add components and dependencies to your app using the cli.
-        </AlertDescription>
+      <Alert variant="destructive">
+        <Terminal className="w-4 h-4 mr-2" />
+        <AlertTitle>Error!</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
   } else {

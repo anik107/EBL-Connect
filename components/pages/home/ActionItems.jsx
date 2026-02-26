@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getActionItems } from "@/services/actionItems.service";
+import { data } from "@/data/data";
 import { Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -18,32 +18,9 @@ const ActionItems = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getActionItems();
-        if (!ignore && response?.data) {
-          setActionItems(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // Use static action items from data.js
+    setActionItems(data.action_items || []);
+    setLoading(false);
   }, []);
 
   let content = null;

@@ -2,6 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCategoriesAnalysis } from "@/services/emotion.service";
+import { data } from "@/data/data";
 import { Terminal } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -38,32 +39,9 @@ const EmotionDonutChart = () => {
     }));
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getCategoriesAnalysis();
-        if (!ignore && response?.data) {
-          setCategoryAnalysis(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // Use static category analysis from data.js
+    setCategoryAnalysis(data.sentiment_analysis?.post_categories || {});
+    setLoading(false);
   }, []);
 
   const handleToggle = (key) => {

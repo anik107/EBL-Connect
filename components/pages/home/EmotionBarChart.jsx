@@ -1,5 +1,7 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getEmotions } from "@/services/emotion.service";
+import { data } from "@/data/data";
+import { Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -30,32 +32,9 @@ const EmotionBarChart = () => {
   }));
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getEmotions();
-        if (!ignore && response?.data) {
-          setEmotions(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // Use static emotion data from data.js
+    setEmotions(data.sentiment_analysis?.emotion_distribution || {});
+    setLoading(false);
   }, []);
 
   let content = null;

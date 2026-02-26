@@ -9,10 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getSentiment } from "@/services/sentiment.service";
 import { PieChart as PieChartIcon, Terminal } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { data } from "@/data/data";
 import {
   Cell,
   Legend,
@@ -36,32 +36,9 @@ const SentimentDistribution = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let ignore = false;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getSentiment();
-        if (!ignore && response?.data) {
-          setSentiment(response?.data);
-        }
-      } catch (error) {
-        if (!ignore) {
-          setError(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    };
-
-    if (!ignore) {
-      fetchData();
-    }
-
-    return () => {
-      ignore = true;
-    };
+    // use static sentiment distribution from data file
+    setSentiment(data.sentiment_analysis?.sentiment_distribution || {});
+    setLoading(false);
   }, []);
 
   const handleToggle = (key) => {

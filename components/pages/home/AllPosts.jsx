@@ -2,7 +2,7 @@
 
 import TanstackTableBody from "@/components/common/TanstackTableBody";
 import TanstackTableHeader from "@/components/common/TanstackTableHeader";
-import { getAllPosts } from "@/services/fullData.service";
+import { data } from "@/data/data";
 import {
   getCoreRowModel,
   getSortedRowModel,
@@ -50,24 +50,23 @@ const AllPosts = () => {
 
   const { page, limit, loading, totalPosts, posts, isError, error } = state;
 
-  const fetchPosts = useCallback(async () => {
+  const fetchPosts = useCallback(() => {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "RESET_ERROR" });
 
     try {
-      const response = await getAllPosts(page);
-
-      if (response?.items) {
-        dispatch({ type: "SET_POSTS", payload: response?.items });
-        dispatch({
-          type: "SET_TOTAL_POSTS",
-          payload: response?.pagination?.total_posts,
-        });
-      }
+      // Use static data from data.js
+      const allPosts = [...(data.action_items || []), ...(data.sentiment_analysis?.top_posts || [])];
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedPosts = allPosts.slice(startIndex, endIndex);
+      
+      dispatch({ type: "SET_POSTS", payload: paginatedPosts });
+      dispatch({ type: "SET_TOTAL_POSTS", payload: allPosts.length });
     } catch (error) {
       dispatch({
         type: "SET_ERROR",
-        payload: error.message || "Failed to fetch users.",
+        payload: error.message || "Failed to fetch posts.",
       });
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
@@ -130,10 +129,10 @@ const AllPosts = () => {
       cell: ({ row }) => row.getValue("sentiment"),
     },
     {
-      accessorKey: "comment_count",
+      accessorKey: "comments_count",
       header: () => <div className="text-center">Comment Count</div>,
       cell: ({ row }) => (
-        <div className="text-center">{row.getValue("comment_count")}</div>
+        <div className="text-center">{row.getValue("comments_count")}</div>
       ),
     },
     {
