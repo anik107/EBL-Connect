@@ -9,14 +9,15 @@ const Header = () => {
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
         {/* EBL Logo */}
-        <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm flex-shrink-0 bg-white">
+        <div className="h-10 sm:h-12 w-auto flex-shrink-0 bg-white rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm p-1.5">
           <Image
             src="/ebl-logo.jpg"
             alt="EBL Logo"
-            width={56}
-            height={56}
-            className="h-full w-full object-cover"
+            width={600}
+            height={300}
+            className="h-full w-auto object-contain"
             priority
+            unoptimized
           />
         </div>
         {/* Divider */}
@@ -27,7 +28,7 @@ const Header = () => {
             EBL Connect
           </h1>
           <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
-            Social Media Analytics Dashboard
+            Social Media Analytics
           </p>
         </div>
       </div>
